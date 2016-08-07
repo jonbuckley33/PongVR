@@ -1,0 +1,7 @@
+# gitignore file
+Temp/*
+Library/*
+Build/*
+
+*.pidb
+*.userprefs
