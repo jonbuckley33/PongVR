@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-[ExecuteInEditMode]
-public class PanelWall : MonoBehaviour {
+//[ExecuteInEditMode]
+public class PanelWall : NetworkBehaviour {
 	public float PanelWidth;
 	public float PanelHeight;
 	public float PanelDepth;
@@ -18,6 +19,8 @@ public class PanelWall : MonoBehaviour {
 	}
 
 	void Update() {
+		if (!isLocalPlayer)
+			return;
 		ResetChildren ();
 	}
 

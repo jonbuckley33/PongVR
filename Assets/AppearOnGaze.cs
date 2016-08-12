@@ -14,7 +14,7 @@ public class AppearOnGaze : MonoBehaviour, IGvrGazeResponder {
 
 	public void SetGazedAt(bool gazedAt) {
 		if (gazedAt) {
-			GetComponent<Renderer>().material.color = new Color (0.5f, 0.5f, 0.5f, .4f);
+			GetComponent<Renderer>().material.color = new Color (0.5f, 0.5f, 0.5f, 1.0f);
 			transform.gameObject.layer = 8;
 		} else {
 			GetComponent<Renderer>().material.color = new Color (0.0f, 0.5f, 0.5f, .05f);
