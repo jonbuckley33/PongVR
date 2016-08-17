@@ -15,10 +15,12 @@ public class AppearOnGaze : MonoBehaviour, IGvrGazeResponder {
 	public void SetGazedAt(bool gazedAt) {
 		if (gazedAt) {
 			GetComponent<Renderer>().material.color = new Color (0.5f, 0.5f, 0.5f, .4f);
-			transform.gameObject.layer = 8;
+			transform.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+			//transform.gameObject.layer = 8;
 		} else {
 			GetComponent<Renderer>().material.color = new Color (0.0f, 0.5f, 0.5f, .05f);
-			transform.gameObject.layer = 9;
+//			transform.gameObject.layer = 9;
+			transform.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 		}
 	}
 

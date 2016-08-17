@@ -8,9 +8,14 @@ public class GameManager : MonoBehaviour {
 	public int NumPlayers;
 	public List<Transform> PlayerWalls;
 	public float Force;
+	public float SpeedUpForce;
+
+	public GameObject UI;
+	public Light light;
 
 	private Vector3[] player_directions;
 	private int player_turn = 0;
+	private int num_hits = 0;
 
 	private List<int> scores;
 
@@ -41,7 +46,6 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 	}
 
 	void SpawnBall() {
@@ -49,11 +53,13 @@ public class GameManager : MonoBehaviour {
 		print ("putting ball at 4, 4, 4");
 
 		new_ball.GetComponent<PongBall>().RegisterBallMissedPaddleHandler (BallMissedPaddleHandler);
+		new_ball.GetComponent<PongBall> ().RegisterBallHitPaddleHandler (BallHitPaddleHandler);
 
 		active_ball = new_ball;
 	}
 
 	void ResetBall() {
+		num_hits = 0;
 		if (active_ball == null) {
 			SpawnBall ();
 		}
@@ -62,15 +68,31 @@ public class GameManager : MonoBehaviour {
 		active_ball.GetComponent<Rigidbody>().AddForce (player_directions[player_turn] * Force);
 	}
 
+	void SpeedUpBall() {
+		Rigidbody ball_rigid_body = active_ball.GetComponent<Rigidbody> ();
+		ball_rigid_body.AddForce((ball_rigid_body.velocity.normalized + Random.insideUnitSphere) * SpeedUpForce, ForceMode.Impulse);
+	}
+
+	void BallHitPaddleHandler(int player_who_hit) {
+		num_hits++;
+		if (num_hits % 2 == 0) {
+			light.color = new Color (0.7f, 0.5f, 0.0f);
+		} else {
+			light.color = new Color (0.0f, 0.5f, 0.7f);
+		}
+
+		SpeedUpBall ();
+	}
+
 	void BallMissedPaddleHandler(int player_who_scored) {
 		print ("Ball missed paddle handler");
 		scores [player_who_scored]++;
 
+		light.color = new Color (0.7f, 0.0f, 0.0f);
+
 		// Advance player turn.
 		player_turn++;
 		player_turn %= NumPlayers;
-
-		active_ball.GetComponent<Rigidbody> ().AddForce (Random.insideUnitSphere * 50.0f);
 
 		ResetBall ();
 	}

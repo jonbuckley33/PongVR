@@ -6,6 +6,8 @@ public class PongBall : MonoBehaviour {
 
 	public delegate void BallMissedPaddleHandler(int player_who_scored);
 	BallMissedPaddleHandler ball_missed_paddle_handler;
+	public delegate void BallHitPaddleHandler(int player_who_scored);
+	BallHitPaddleHandler ball_hit_paddle_handler;
 
 	// Use this for initialization
 	void Start () {
@@ -15,15 +17,24 @@ public class PongBall : MonoBehaviour {
 		ball_missed_paddle_handler = handler;
 	}
 
+	public void RegisterBallHitPaddleHandler(BallHitPaddleHandler handler) {
+		ball_hit_paddle_handler = handler;
+	}
+
 	void OnCollisionEnter (Collision col)
 	{
 		if (col.gameObject.tag == "Finish") {
-			ball_missed_paddle_handler (0);
+			if (ball_missed_paddle_handler != null) {		
+				ball_missed_paddle_handler (0);
+			}
 		} else if (col.gameObject.tag == "Arena") {
 			// Add a random force.
 			var random_force = Random.insideUnitSphere * RandomForce;
-			print ("Random force:" + random_force);
-			GetComponent<Rigidbody>().AddForce(random_force);
+			GetComponent<Rigidbody> ().AddForce (random_force);
+		} else if (col.gameObject.tag == "Paddle") {
+			if (ball_hit_paddle_handler != null) {
+				ball_hit_paddle_handler (0);
+			}
 		}
 	}
 	
